@@ -3,14 +3,11 @@
  */
 
 var express = require('express'),
-    routes = require('./routes'),
-    user = require('./routes/user'),
     http = require('http'),
-    path = require('path');
+    path = require('path'),
+    ArticleProvider = require('./articleprovider-mongodb').ArticleProvider;
 
 var app = express();
-
-var ArticleProvider = require('./articleprovider-memory').ArticleProvider;
 
 app.configure(function() {
     app.set('port', process.env.PORT || 3000);
@@ -29,34 +26,20 @@ app.configure('development', function() {
     app.use(express.errorHandler());
 });
 
+var articleProvider = new ArticleProvider('localhost', 27017),
+    routes = require('./routes')(articleProvider);
+
 app.get('/users', user.list);
-var articleProvider = new ArticleProvider();
 
-app.get('/', function(req, res) {
-    articleProvider.findAll(function(error, docs) {
-        res.render('index.jade', {
-            title: 'Blog',
-            articles: docs
+app.get('/', routes.index);
 
-        });
-    });
-})
+app.get('/blog/new', routes.get_new);
 
-app.get('/blog/new', function(req, res) {
-    res.render('blog_new.jade', {
-        title: 'New Post'
-    });
-});
+app.post('/blog/new', routes.post_new);
 
-app.post('/blog/new', function(req, res) {
-    articleProvider.save({
-        title: req.param('title'),
-        body: req.param('body')
-    }, function(error, docs) {
-        res.redirect('/')
-    });
-});
+app.get('/blog/:id', routes.get_by_id);
 
+app.post('/blog/addComment', routes.add_comment);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

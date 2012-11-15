@@ -29,8 +29,6 @@ app.configure('development', function() {
 var articleProvider = new ArticleProvider('localhost', 27017),
     routes = require('./routes')(articleProvider);
 
-app.get('/users', user.list);
-
 app.get('/', routes.index);
 
 app.get('/blog/new', routes.get_new);

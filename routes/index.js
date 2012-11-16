@@ -48,7 +48,7 @@
          });
         },
 
-        not_found: function(req, res){
+        not_found: function(req, res, next){
             res.send('what???', 404);
         }
 

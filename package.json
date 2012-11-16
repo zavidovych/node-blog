@@ -10,5 +10,9 @@
     "jade": "*",
     "stylus": "*",
     "mongodb": "*"
+  },
+  "engines": {
+    "node": ">=0.8.2",
+    "npm" : ">1.1"
   }
 }

@@ -20,13 +20,12 @@
             });
         },
 
-        post_new: function(req, res) {
-            articleProvider.save({
-                title: req.param('title'),
+        post_new: function(req, res) {    articleProvider.save({
+            title: req.param('title'),
                 body: req.param('body')
             }, function(error, docs) {
                 res.redirect('/')
-            });
+            });   
         },
 
         get_by_id: function(req, res) {
@@ -48,6 +47,10 @@
              res.redirect('/blog/' + req.param('_id'))
          });
         },
+
+        not_found: function(req, res){
+            res.send('what???', 404);
+        }
 
 
     };
